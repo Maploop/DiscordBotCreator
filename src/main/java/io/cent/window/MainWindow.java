@@ -1,9 +1,11 @@
 package io.cent.window;
 
+import io.cent.DiscordBotCreator;
 import io.cent.assets.AssetObject;
 import io.cent.data.LocalData;
 import io.cent.project.Project;
 import io.cent.project.ProjectCreator;
+import io.cent.project.ProjectGetter;
 import io.cent.util.DUtil;
 
 import javax.swing.*;
@@ -18,7 +20,8 @@ public class MainWindow extends JFrame {
     private JMenuItem item, item3, project, settings;
     private JMenuItem helpItem1;
     private JMenuItem item2;
-    private JLabel jLabel;
+    private JLabel jLabel, projectLabel;
+
 
     public MainWindow() {
         super("Discord Bot Creator by Cent");
@@ -68,6 +71,9 @@ public class MainWindow extends JFrame {
         });
 
         settings = new JMenuItem("Settings", new ImageIcon(AssetObject.settings));
+        settings.addActionListener(e -> {
+            new SettingsWindow();
+        });
 
         projSubmenu1.add(project);
         projSubmenu1.add(item2);
@@ -90,7 +96,15 @@ public class MainWindow extends JFrame {
             File selected = jfc.getSelectedFile();
             System.out.println(selected.toString());
 
-            JOptionPane.showMessageDialog(this, "Cannot open project!\n(Curropted or outdated)", "Open Project", JOptionPane.ERROR_MESSAGE);
+            if (selected != null) {
+                try {
+                    Project project = ProjectGetter.get(selected);
+                    project.switchTo();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Cannot open project!\n(Curropted or outdated)", "Open Project", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         });
         jMenu.add(item3);
 
@@ -106,6 +120,31 @@ public class MainWindow extends JFrame {
 
         setJMenuBar(jMenuBar);
 
+        setFocusable(true);
         setVisible(true);
+        requestFocus();
+    }
+
+    public void setProject(Project project) {
+        new Thread(() -> {
+            try {
+                jLabel.setText("Loading...");
+                Thread.sleep(1000);
+                jLabel.setText("");
+
+                if (projectLabel != null) {
+                    projectLabel = new JLabel("Project: " + project.getName());
+                    return;
+                }
+
+                projectLabel = new JLabel("Project: " + project.getName());
+                projectLabel.setBounds(10, 10, 5000, 20);
+                projectLabel.setFont(new Font("Arial", Font.BOLD, 16));
+                add(projectLabel);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Cannot open project!\n(Curropted or outdated)", "Open Project", JOptionPane.ERROR_MESSAGE);
+            }
+        }).start();
     }
 }

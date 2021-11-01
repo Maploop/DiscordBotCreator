@@ -41,6 +41,14 @@ public class Installer {
             fw.write(object.toJSONString());
             fw.flush();
 
+            JSONObject object1 = new JSONObject();
+            object1.put("askBeforeExit", true);
+            object1.put("theme", "MonoLight");
+
+            FileWriter fw1 = new FileWriter(appData + File.separator + "settings.json");
+            fw1.write(object1.toJSONString());
+            fw1.flush();
+
             File file = new File("src/main/resources/icon.png");
             Files.copy(file.toPath(), icon.toPath());
 
