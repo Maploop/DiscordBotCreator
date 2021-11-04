@@ -1,7 +1,10 @@
 package io.cent.util;
 
 import io.cent.DiscordBotCreator;
+import io.cent.data.SettingsJSON;
+import io.cent.theme.Theme;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +17,7 @@ import java.util.logging.Logger;
 public class DUtil {
     public static final File appData = new File(DUtil.getAppData() + File.separator + "DiscordBotCreator" + File.separator + "V" + DiscordBotCreator.VERSION);
     public static final File projects = new File(getUserHome() + File.separator + "Bot Creator Projects");
+    public static final File themes = new File(DUtil.getAppData() + File.separator + "DiscordBotCreator" + File.separator + "V" + DiscordBotCreator.VERSION + File.separator + "Themes");
 
     // Get user's app data directory
     public static File getAppData() {
@@ -72,5 +76,34 @@ public class DUtil {
         Date date = new Date(input);
 
         return format.format(date);
+    }
+
+    public static void delay(Runnable runnable, long millis) {
+        new Thread(() -> {
+            try {
+                Thread.sleep(millis);
+                runnable.run();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DUtil.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
+    }
+
+    public static Theme getSelectedTheme() {
+        try {
+            for (File f : themes.listFiles()) {
+                Theme t = Theme.parse(f);
+                if (t != null) {
+                    if (t.getName() == SettingsJSON.get("theme").toString()) {
+                        return t;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(DUtil.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Cannot load theme", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return null;
     }
 }

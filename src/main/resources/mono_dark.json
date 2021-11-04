@@ -1,0 +1,29 @@
+{
+  "name": "Mono Dark",
+  "author": "Cent",
+  "background": {
+    "r": 54,
+    "g": 53,
+    "b": 52
+  },
+  "menuBar": {
+    "r": 38,
+    "g": 38,
+    "b": 37
+  },
+  "font": {
+    "name": "Roboto",
+    "size": "16",
+    "style": "BOLD"
+  },
+  "text": {
+    "r": 161,
+    "g": 161,
+    "b": 157
+  },
+  "button": {
+    "r": 56,
+    "g": 56,
+    "b": 56
+  }
+}

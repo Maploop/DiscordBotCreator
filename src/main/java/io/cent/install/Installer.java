@@ -4,14 +4,15 @@ import io.cent.DiscordBotCreator;
 import io.cent.assets.AssetObject;
 import io.cent.util.DUtil;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Logger;
 
 public class Installer {
@@ -28,10 +29,22 @@ public class Installer {
             appData.mkdirs();
         }
 
-        try {
-            File icon = new File(appData + File.separator + "icon.png");
-            icon.createNewFile();
+        File assets = new File(DUtil.appData + File.separator + "assets");
+        if (!assets.exists()) {
+            assets.mkdirs();
+        }
 
+        try {
+            Files.copy(DiscordBotCreator.class.getClassLoader().getResourceAsStream("assets/settings.png"), new File(assets + File.separator + "settings.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(DiscordBotCreator.class.getClassLoader().getResourceAsStream("assets/icon.png"), new File(assets + File.separator + "icon.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(DiscordBotCreator.class.getClassLoader().getResourceAsStream("assets/workspace.png"), new File(assets + File.separator + "workspace.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to install!\n" + ex.getMessage(), "Installation Fail!", JOptionPane.ERROR_MESSAGE);
+            System.exit(-999);
+        }
+
+        try {
             JSONObject object = new JSONObject();
             object.put("installationTime", System.currentTimeMillis());
             object.put("version", DiscordBotCreator.VERSION);
@@ -49,10 +62,26 @@ public class Installer {
             fw1.write(object1.toJSONString());
             fw1.flush();
 
-            File file = new File("src/main/resources/icon.png");
-            Files.copy(file.toPath(), icon.toPath());
+            JSONObject object2 = new JSONObject();
+            object2.put("help", "my life is a waste of time; all i am is a piece of shit; there is nothing i hate in my life more than me; i wish i could just die; easily; it'd be nice; i should have attempted suicide sooner; it's too late now");
 
-            AssetObject.icon = ImageIO.read(icon);
+            FileWriter fw2 = new FileWriter(appData + File.separator + "help.json");
+            fw2.write(object2.toJSONString());
+            fw2.flush();
+
+            DUtil.themes.mkdirs();
+
+            InputStream is = DiscordBotCreator.class.getClassLoader().getResourceAsStream("mono_light.json");
+            File monoLight = new File(appData + File.separator + "Themes" + File.separator + "mono_light.json");
+            monoLight.createNewFile();
+            Files.copy(is, monoLight.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            InputStream is1 = DiscordBotCreator.class.getClassLoader().getResourceAsStream("mono_dark.json");
+            File monoDark = new File(appData + File.separator + "Themes" + File.separator + "mono_dark.json");
+            monoDark.createNewFile();
+            Files.copy(is1, monoDark.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            System.out.println("Installation complete!");
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Failed to install!\n" + ex.getMessage(), "Installation Fail!", JOptionPane.ERROR_MESSAGE);
@@ -62,10 +91,9 @@ public class Installer {
 
     public static void loadAssets() {
         try {
-            File icon = new File(DUtil.getAppData() + File.separator + "DiscordBotCreator" + File.separator + "V" + DiscordBotCreator.VERSION + File.separator + "icon.png");
-            AssetObject.icon = ImageIO.read(icon);
-            File settings = new File(DUtil.getAppData() + File.separator + "DiscordBotCreator" + File.separator + "V" + DiscordBotCreator.VERSION + File.separator + "settings.png");
-            AssetObject.settings = ImageIO.read(settings);
+            AssetObject.icon = ImageIO.read(new File(DUtil.appData + File.separator + "assets" + File.separator + "icon.png"));
+            AssetObject.settings = ImageIO.read(new File(DUtil.appData + File.separator + "assets" + File.separator + "settings.png"));
+            AssetObject.workspace = ImageIO.read(new File(DUtil.appData + File.separator + "assets" + File.separator + "workspace.png"));
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Failed to load assets!\n" + ex.getMessage(), "Installation Fail!", JOptionPane.ERROR_MESSAGE);

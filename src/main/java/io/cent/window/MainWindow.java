@@ -3,6 +3,7 @@ package io.cent.window;
 import io.cent.DiscordBotCreator;
 import io.cent.assets.AssetObject;
 import io.cent.data.LocalData;
+import io.cent.listener.KeyListener;
 import io.cent.project.Project;
 import io.cent.project.ProjectCreator;
 import io.cent.project.ProjectGetter;
@@ -10,6 +11,7 @@ import io.cent.util.DUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Locale;
@@ -17,10 +19,13 @@ import java.util.Locale;
 public class MainWindow extends JFrame {
     private JMenuBar jMenuBar;
     private JMenu jMenu, help, projSubmenu1;
-    private JMenuItem item, item3, project, settings;
+    private JMenuItem item, item3, project, settings, projectDetails;
     private JMenuItem helpItem1;
     private JMenuItem item2;
     private JLabel jLabel, projectLabel;
+
+    // for project, create a tabbed pane
+    private JTabbedPane tabbedPane;
 
 
     public MainWindow() {
@@ -70,7 +75,10 @@ public class MainWindow extends JFrame {
                     "\nDescription: " + moduleDescription + "\nAuthor: " + moduleAuthor, "New Module", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        settings = new JMenuItem("Settings", new ImageIcon(AssetObject.settings));
+        if (AssetObject.settings != null)
+            settings = new JMenuItem("Settings", new ImageIcon(AssetObject.settings));
+        else
+            settings = new JMenuItem("Settings");
         settings.addActionListener(e -> {
             new SettingsWindow();
         });
@@ -117,6 +125,7 @@ public class MainWindow extends JFrame {
         help.add(helpItem1);
 
         jMenuBar.add(help);
+        addKeyListener(new KeyListener());
 
         setJMenuBar(jMenuBar);
 
@@ -133,7 +142,15 @@ public class MainWindow extends JFrame {
                 jLabel.setText("");
 
                 if (projectLabel != null) {
-                    projectLabel = new JLabel("Project: " + project.getName());
+                    projectLabel.setText("Project: " + project.getName());
+
+                    ActionListener curr = projectDetails.getActionListeners()[0];
+                    projectDetails.removeActionListener(curr);
+
+                    projectDetails.addActionListener(e -> new ProjectDetailsWindow(project));
+
+                    projectLabel.setBounds(10, 10, 5000, 20);
+                    projectLabel.setFont(new Font("Arial", Font.BOLD, 16));
                     return;
                 }
 
@@ -145,6 +162,12 @@ public class MainWindow extends JFrame {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Cannot open project!\n(Curropted or outdated)", "Open Project", JOptionPane.ERROR_MESSAGE);
             }
+
+            projectDetails = new JMenuItem("Project Details");
+            projectDetails.addActionListener(e -> {
+                new ProjectDetailsWindow(project);
+            });
+            jMenu.add(projectDetails);
         }).start();
     }
 }

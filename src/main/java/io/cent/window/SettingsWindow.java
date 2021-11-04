@@ -2,12 +2,17 @@ package io.cent.window;
 
 import io.cent.assets.AssetObject;
 import io.cent.data.SettingsJSON;
+import io.cent.theme.Theme;
+import io.cent.util.DUtil;
 
 import javax.swing.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SettingsWindow extends JFrame {
     private JCheckBox askBeforeExit;
-    private JButton save;
+    private JButton save, openThemeFolder;
     private JComboBox<String> theme;
     private JLabel themeLabel;
 
@@ -19,12 +24,19 @@ public class SettingsWindow extends JFrame {
         setResizable(false);
         setLayout(null);
 
+        List<String> themes = new ArrayList<>();
+        for (File f : DUtil.themes.listFiles()) {
+            Theme theme = Theme.parse(f);
+            themes.add(theme.getName());
+        }
+
         themeLabel = new JLabel("Theme");
         themeLabel.setBounds(10, 10, 100, 20);
         add(themeLabel);
 
-        theme = new JComboBox<>(new String[]{"MonoLight"});
+        theme = new JComboBox<>(themes.toArray(new String[0]));
         theme.setBounds(110, 10, 100, 20);
+        theme.setSelectedItem(SettingsJSON.get("theme"));
         add(theme);
 
         save = new JButton("Save");
@@ -34,6 +46,18 @@ public class SettingsWindow extends JFrame {
             SettingsJSON.set("theme", theme.getSelectedItem().toString());
             dispose();
         });
+
+        openThemeFolder = new JButton("Themes Folder");
+        openThemeFolder.setBounds(10, 120, 130, 30);
+        openThemeFolder.addActionListener(e -> {
+            try {
+                Runtime.getRuntime().exec("explorer.exe /select," + DUtil.themes.getAbsolutePath());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Failed to open theme folder", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        add(openThemeFolder);
 
         askBeforeExit = new JCheckBox("Ask before exit");
 

@@ -1,0 +1,29 @@
+{
+  "name": "Mono Light",
+  "author": "Cent",
+  "background": {
+    "r": 255,
+    "g": 255,
+    "b": 255
+  },
+  "menuBar": {
+    "r": 255,
+    "g": 255,
+    "b": 255
+  },
+  "font": {
+    "name": "Roboto",
+    "size": "14",
+    "style": "ITALIC"
+  },
+  "text": {
+    "r": 0,
+    "g": 0,
+    "b": 0
+  },
+  "button": {
+    "r": 0,
+    "g": 0,
+    "b": 0
+  }
+}
