@@ -34,10 +34,20 @@ public class Installer {
             assets.mkdirs();
         }
 
+        File centServices = new File(appData + File.separator + "CentServices");
+        if (!centServices.exists()) {
+            centServices.mkdirs();
+        }
+
         try {
             Files.copy(DiscordBotCreator.class.getClassLoader().getResourceAsStream("assets/settings.png"), new File(assets + File.separator + "settings.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(DiscordBotCreator.class.getClassLoader().getResourceAsStream("assets/icon.png"), new File(assets + File.separator + "icon.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(DiscordBotCreator.class.getClassLoader().getResourceAsStream("assets/workspace.png"), new File(assets + File.separator + "workspace.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+//            Files.copy(
+//                    DiscordBotCreator.class.getClassLoader().getResourceAsStream("CentServices.jar"),
+//                    new File(appData + File.separator + "CentServices" + File.separator + "CentServices.jar").toPath(), StandardCopyOption.REPLACE_EXISTING
+//            );
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Failed to install!\n" + ex.getMessage(), "Installation Fail!", JOptionPane.ERROR_MESSAGE);
