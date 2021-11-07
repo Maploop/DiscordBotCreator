@@ -3,6 +3,8 @@ package io.cent;
 import io.cent.install.Installer;
 import io.cent.project.Project;
 import io.cent.theme.Theme;
+import io.cent.util.Log;
+import io.cent.window.AppConsole;
 import io.cent.util.DUtil;
 import io.cent.util.UserFiles;
 import io.cent.window.InstallerWindow;
@@ -19,6 +21,7 @@ import java.io.InputStreamReader;
 import static io.cent.logging.Statistics.StatisticLog;
 
 public class DiscordBotCreator {
+    public static boolean openConsole = false;
     public static Project openProject = null;
     public static final String VERSION = "1.0-BETA";
     public static Theme selectedTheme = null;
@@ -26,21 +29,29 @@ public class DiscordBotCreator {
     public static MainWindow mainWindow;
 
     public DiscordBotCreator() {
+        Log.info("Starting...");
+
         try {
-            JWindow jWindow = new JWindow();
-            jWindow.setSize(230, 210);
-            jWindow.setLocationRelativeTo(null);
-            jWindow.setAlwaysOnTop(true);
-            jWindow.setBackground(new Color(0, 0, 0, 0));
+            new Thread(() -> {
+                try {
+                    JWindow jWindow = new JWindow();
+                    jWindow.setSize(230, 210);
+                    jWindow.setLocationRelativeTo(null);
+                    jWindow.setAlwaysOnTop(true);
+                    jWindow.setBackground(new Color(0, 0, 0, 0));
 
-            JLabel jLabel = new JLabel(new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("assets/icon.png"))));
-            jLabel.setVisible(true);
+                    JLabel jLabel = new JLabel(new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("assets/icon.png"))));
+                    jLabel.setVisible(true);
 
-            jWindow.add(jLabel);
-            jWindow.setVisible(true);
+                    jWindow.add(jLabel);
+                    jWindow.setVisible(true);
 
-            Thread.sleep(5000);
-            jWindow.dispose();
+                    Thread.sleep(3000);
+                    jWindow.dispose();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }).start();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -83,10 +94,23 @@ public class DiscordBotCreator {
             Process p = pc.start();
             BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while (r.readLine() != null) {
-                System.out.println("Services -> " + r.readLine());
+                Log.info("Services -> " + r.readLine());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public static void pop(String msg) {
+        JOptionPane.showMessageDialog(null, msg);
+    }
+
+    public final static AppConsole console;
+
+    static {
+        console = new AppConsole();
+        if (openConsole) {
+            console.setVisible(true);
         }
     }
 }

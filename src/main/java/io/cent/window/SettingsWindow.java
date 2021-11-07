@@ -1,5 +1,6 @@
 package io.cent.window;
 
+import io.cent.DiscordBotCreator;
 import io.cent.assets.AssetObject;
 import io.cent.data.SettingsJSON;
 import io.cent.theme.Theme;
@@ -19,7 +20,7 @@ public class SettingsWindow extends JFrame {
     public SettingsWindow() {
         super("Settings");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setSize(300, 200);
+        setSize(500, 300);
         setLocationRelativeTo(null);
         setResizable(false);
         setLayout(null);
@@ -35,20 +36,20 @@ public class SettingsWindow extends JFrame {
         add(themeLabel);
 
         theme = new JComboBox<>(themes.toArray(new String[0]));
-        theme.setBounds(110, 10, 100, 20);
+        theme.setBounds(70, 10, 250, 20);
         theme.setSelectedItem(SettingsJSON.get("theme"));
         add(theme);
 
         save = new JButton("Save");
-        save.setBounds(150, 120, 100, 30);
+        save.setBounds(350, 200, 100, 30);
         save.addActionListener(e -> {
             SettingsJSON.set("askBeforeExit", askBeforeExit.isSelected());
             SettingsJSON.set("theme", theme.getSelectedItem().toString());
             dispose();
         });
 
-        openThemeFolder = new JButton("Themes Folder");
-        openThemeFolder.setBounds(10, 120, 130, 30);
+        openThemeFolder = new JButton("Open Folder");
+        openThemeFolder.setBounds(355, 10, 120, 20);
         openThemeFolder.addActionListener(e -> {
             try {
                 Runtime.getRuntime().exec("explorer.exe /select," + DUtil.themes.getAbsolutePath());

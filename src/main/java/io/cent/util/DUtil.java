@@ -4,11 +4,14 @@ import io.cent.DiscordBotCreator;
 import io.cent.data.SettingsJSON;
 import io.cent.theme.Theme;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
@@ -105,5 +108,50 @@ public class DUtil {
         }
 
         return null;
+    }
+
+    public static String getSourceUrl(String url) throws Exception {
+        URL yahoo = new URL(url);
+        URLConnection yc = yahoo.openConnection();
+        BufferedReader in = new BufferedReader(new InputStreamReader(
+                yc.getInputStream(), "UTF-8"));
+        String inputLine;
+        String total = "";
+        while ((inputLine = in.readLine()) != null)
+            total += inputLine;
+        in.close();
+
+        return total;
+    }
+
+    public static String fetchDownloadLink(String str) {
+        System.out.println("Fetching download link");
+        try {
+            String regex = "(?=\\<)|(?<=\\>)";
+            String data[] = str.split(regex);
+            String found = "NOTFOUND";
+            for (String dat : data) {
+                if (dat.contains("DLP_mOnDownload(this)")) {
+                    found = dat;
+                    break;
+                }
+            }
+            String wentthru = found.substring(found.indexOf("href=\"\"") + 6);
+                    wentthru = wentthru.substring(0, wentthru.indexOf("\""));
+            return wentthru;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            return "ERROR";
+        }
+    }
+
+    public static ImageIcon getIconImage(String path) {
+        try {
+            return new ImageIcon(ImageIO.read(new File(path)));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }

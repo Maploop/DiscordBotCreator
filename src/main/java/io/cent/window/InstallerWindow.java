@@ -6,7 +6,11 @@ import io.cent.install.Installer;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class InstallerWindow extends JFrame {
     private JButton install;
@@ -40,9 +44,12 @@ public class InstallerWindow extends JFrame {
             add(progressBar);
 
             install.setEnabled(false);
-            install.setText("Installing...");
+            install.setText("Downloading...");
 
             new Thread(() -> {
+                Installer.downloadServices(this.progressBar);
+
+                install.setText("Installing...");
                 for (int i = 0; i <= 100; i++) {
                     try {
                         Thread.sleep(60);
@@ -50,13 +57,11 @@ public class InstallerWindow extends JFrame {
                         e1.printStackTrace();
                     }
                     progressBar.setValue(i);
-                    progressBar.setString(i + "%");
+                    progressBar.setString("Installing: " + i + "%");
 
                     if (i == 100) {
                         Installer.install();
-                        JFrame frame = new JFrame();
-                        frame.setSize(300, 200);
-                        JOptionPane.showMessageDialog(frame, "Cent has been installed. Please restart the program.", "Installation Notice", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(new JFrame(), "Cent has been installed. Please restart the program.", "Installation Notice", JOptionPane.INFORMATION_MESSAGE);
                         System.exit(0);
                     }
                 }
@@ -108,6 +113,8 @@ public class InstallerWindow extends JFrame {
 
         setLocationRelativeTo(null);
         setResizable(false);
+        setFocusable(true);
         setVisible(true);
+        requestFocus();
     }
 }

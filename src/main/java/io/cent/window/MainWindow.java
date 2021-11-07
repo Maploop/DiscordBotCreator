@@ -3,6 +3,7 @@ package io.cent.window;
 import io.cent.DiscordBotCreator;
 import io.cent.assets.AssetObject;
 import io.cent.data.LocalData;
+import io.cent.data.SettingsJSON;
 import io.cent.listener.KeyListener;
 import io.cent.project.Project;
 import io.cent.project.ProjectCreator;
@@ -19,10 +20,11 @@ import java.util.Locale;
 public class MainWindow extends JFrame {
     private JMenuBar jMenuBar;
     private JMenu jMenu, help, projSubmenu1;
-    private JMenuItem item, item3, project, settings, projectDetails;
+    private JMenuItem item, item3, project, settings, projectDetails, openConsole;
     private JMenuItem helpItem1;
     private JMenuItem item2;
     private JLabel jLabel, projectLabel;
+    private JPopupMenu popupMenu;
 
     // for project, create a tabbed pane
     private JTabbedPane tabbedPane;
@@ -46,6 +48,13 @@ public class MainWindow extends JFrame {
         jMenu.setMnemonic(KeyEvent.VK_A);
         jMenu.getAccessibleContext().setAccessibleDescription("View information and create new projects");
         jMenuBar.add(jMenu);
+
+        popupMenu = new JPopupMenu();
+
+        openConsole = new JMenuItem("Show Console");
+        openConsole.addActionListener(e -> {
+            DiscordBotCreator.console.setVisible(true);
+        });
 
         projSubmenu1 = new JMenu("New");
         project = new JMenuItem("Project");
@@ -116,6 +125,8 @@ public class MainWindow extends JFrame {
         });
         jMenu.add(item3);
 
+        jMenu.add(openConsole);
+
         jMenu.add(settings);
 
         help = new JMenu("Help");
@@ -128,6 +139,29 @@ public class MainWindow extends JFrame {
         addKeyListener(new KeyListener());
 
         setJMenuBar(jMenuBar);
+
+        // apply theme
+        if (SettingsJSON.get("theme").equals("dark")) {
+            setBackground(Color.BLACK);
+            jMenuBar.setBackground(Color.BLACK);
+            jMenuBar.setForeground(Color.WHITE);
+            jMenu.setBackground(Color.BLACK);
+            jMenu.setForeground(Color.WHITE);
+            projSubmenu1.setBackground(Color.BLACK);
+            projSubmenu1.setForeground(Color.WHITE);
+            item.setBackground(Color.BLACK);
+            item.setForeground(Color.WHITE);
+            item2.setBackground(Color.BLACK);
+            item2.setForeground(Color.WHITE);
+            item3.setBackground(Color.BLACK);
+            item3.setForeground(Color.WHITE);
+            settings.setBackground(Color.BLACK);
+            settings.setForeground(Color.WHITE);
+            help.setBackground(Color.BLACK);
+            help.setForeground(Color.WHITE);
+            helpItem1.setBackground(Color.BLACK);
+            helpItem1.setForeground(Color.WHITE);
+        }
 
         setFocusable(true);
         setVisible(true);
