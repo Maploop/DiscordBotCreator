@@ -43,9 +43,9 @@ public class Installer {
         }
 
         try {
-            Files.copy(DiscordBotCreator.class.getClassLoader().getResourceAsStream("assets/settings.png"), new File(assets + File.separator + "settings.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
-            Files.copy(DiscordBotCreator.class.getClassLoader().getResourceAsStream("assets/icon.png"), new File(assets + File.separator + "icon.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
-            Files.copy(DiscordBotCreator.class.getClassLoader().getResourceAsStream("assets/workspace.png"), new File(assets + File.separator + "workspace.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Installer.class.getClassLoader().getResourceAsStream("assets/settings.png"), new File(assets + File.separator + "settings.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Installer.class.getClassLoader().getResourceAsStream("assets/icon.png"), new File(assets + File.separator + "icon.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+//            Files.copy(Installer.class.getResourceAsStream("assets/workspace.png"), new File(assets + File.separator + "workspace.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 
         } catch (Exception ex) {
@@ -103,7 +103,7 @@ public class Installer {
         try {
             AssetObject.icon = ImageIO.read(new File(appData + File.separator + "assets" + File.separator + "icon.png"));
             AssetObject.settings = ImageIO.read(new File(appData + File.separator + "assets" + File.separator + "settings.png"));
-            AssetObject.workspace = ImageIO.read(new File(appData + File.separator + "assets" + File.separator + "workspace.png"));
+//            AssetObject.workspace = ImageIO.read(new File(appData + File.separator + "assets" + File.separator + "workspace.png"));
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Failed to load assets!\n" + ex.getMessage(), "Installation Fail!", JOptionPane.ERROR_MESSAGE);

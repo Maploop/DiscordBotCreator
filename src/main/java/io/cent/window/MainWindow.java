@@ -59,6 +59,9 @@ public class MainWindow extends JFrame {
         projSubmenu1 = new JMenu("New");
         project = new JMenuItem("Project");
         project.addActionListener(e -> {
+            new CreateProjectWindow();
+
+            /*
             String projectName = JOptionPane.showInputDialog(this, "Enter Project Name", "New Project", JOptionPane.QUESTION_MESSAGE);
             if (projectName == null)
                 return;
@@ -71,6 +74,7 @@ public class MainWindow extends JFrame {
                 JOptionPane.showMessageDialog(this, "Project Created Successfully!", "New Project", JOptionPane.INFORMATION_MESSAGE);
                 project.switchTo();
             }
+             */
         });
         item2 = new JMenuItem("Module");
         item2.addActionListener(e -> {
@@ -85,7 +89,7 @@ public class MainWindow extends JFrame {
         });
 
         if (AssetObject.settings != null)
-            settings = new JMenuItem("Settings", new ImageIcon(AssetObject.settings));
+            settings = new JMenuItem("Settings", new ImageIcon(AssetObject.settings.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
         else
             settings = new JMenuItem("Settings");
         settings.addActionListener(e -> {
